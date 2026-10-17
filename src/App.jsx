@@ -13,7 +13,7 @@ import Notifications from "./pages/Notifications";
 import Messages from "./pages/Messages";
 import Chat from "./pages/Chat";
 
-import ProtectedRoute from "./components/Protectedroute";
+import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from "./context/AuthContext";
 
 function App() {
