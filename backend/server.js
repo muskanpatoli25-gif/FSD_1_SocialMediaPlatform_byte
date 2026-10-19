@@ -38,10 +38,8 @@ mongoose
     console.error("MongoDB connection failed:", error.message);
   });
 
-// Export the Express app for Vercel
 module.exports = app;
 
-// Start a local server only when running locally
 if (require.main === module) {
   const PORT = process.env.PORT || 5000;
 
