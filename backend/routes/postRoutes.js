@@ -12,7 +12,10 @@ const User = require("../models/User");
 
 // Create uploads folder only in local development.
 // Vercel serverless functions should use cloud storage for uploads.
-if (process.env.NODE_ENV !== "production" && !fs.existsSync(uploadDir)) {
+if (
+  process.env.NODE_ENV !== "production" &&
+  !fs.existsSync(uploadDir)
+) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
 
