@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import Navbar from "../components/Navbar";
 import { useAuth } from "../context/AuthContext";
+import API_URL from "../api";
 
 function Home() {
   const { token, user } = useAuth();
@@ -160,7 +161,7 @@ const visiblePosts = useMemo(() => {
     const fetchPosts = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/posts"
+          API_URL + "/api/posts"
         );
 
         if (!isMounted) return;
@@ -233,7 +234,7 @@ const visiblePosts = useMemo(() => {
         authorIds.map(async (authorId) => {
           try {
             const response = await axios.get(
-              `http://localhost:5000/api/users/${authorId}/profile`,
+              `${API_URL}/api/users/${authorId}/profile`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`,
@@ -310,7 +311,7 @@ const visiblePosts = useMemo(() => {
 
     try {
       const response = await axios.post(
-        `http://localhost:5000/api/users/${authorId}/follow`,
+        `${API_URL}/api/users/${authorId}/follow`,
         {},
         {
           headers: {
@@ -356,7 +357,7 @@ const visiblePosts = useMemo(() => {
 
     try {
       await axios.delete(
-        `http://localhost:5000/api/posts/${postId}`,
+        `${API_URL}/api/posts/${postId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -390,7 +391,7 @@ const visiblePosts = useMemo(() => {
 
     try {
       const response = await axios.post(
-        `http://localhost:5000/api/posts/${postId}/like`,
+        `${API_URL}/api/posts/${postId}/like`,
         {},
         {
           headers: {
@@ -479,7 +480,7 @@ const visiblePosts = useMemo(() => {
 
     try {
       const response = await axios.post(
-        `http://localhost:5000/api/posts/${postId}/comments`,
+        `${API_URL}/api/posts/${postId}/comments`,
         { text },
         {
           headers: {
@@ -538,7 +539,7 @@ const visiblePosts = useMemo(() => {
 
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/posts/${postId}/comments`
+        `${API_URL}/api/posts/${postId}/comments`
       );
 
       setPosts((currentPosts) =>
@@ -824,7 +825,7 @@ const visiblePosts = useMemo(() => {
     {post.media.map((media, index) => {
       const mediaSrc = media.url.startsWith("http")
         ? media.url
-        : `http://localhost:5000${media.url}`;
+        : `${API_URL}${media.url}`;
 
       return (
         <div key={media._id || media.url || index}>
@@ -867,7 +868,7 @@ const visiblePosts = useMemo(() => {
     src={
       post.mediaUrl.startsWith("http")
         ? post.mediaUrl
-        : `http://localhost:5000${post.mediaUrl}`
+        : `${API_URL}${post.mediaUrl}`
     }
     alt="Post attachment"
     style={{

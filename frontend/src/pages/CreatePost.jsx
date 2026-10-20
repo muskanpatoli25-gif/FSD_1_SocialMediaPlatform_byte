@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Navbar from "../components/Navbar";
 import { useAuth } from "../context/AuthContext";
+import API_URL from "../api";
 
 function CreatePost() {
   const { token, user } = useAuth();
@@ -97,7 +98,7 @@ const handleMediaChange = (event) => {
       });
 
       await axios.post(
-        "http://localhost:5000/api/posts",
+        API_URL + "/api/posts",
         formData,
         {
           headers: {

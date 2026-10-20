@@ -4,6 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import Navbar from "../components/Navbar";
 import { useAuth } from "../context/AuthContext";
+import API_URL from "../api";
 
 function PostDetails() {
   const { id } = useParams();
@@ -27,9 +28,9 @@ function PostDetails() {
 
       try {
         const [postResponse, commentsResponse] = await Promise.all([
-          axios.get("http://localhost:5000/api/posts"),
+          axios.get(API_URL + "/api/posts"),
           axios.get(
-            `http://localhost:5000/api/posts/${id}/comments`
+            `${API_URL}/api/posts/${id}/comments`
           ),
         ]);
 
@@ -108,7 +109,7 @@ function PostDetails() {
 
     try {
       const response = await axios.post(
-        `http://localhost:5000/api/posts/${id}/like`,
+        `${API_URL}/api/posts/${id}/like`,
         {},
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -150,7 +151,7 @@ function PostDetails() {
 
     try {
       const response = await axios.post(
-        `http://localhost:5000/api/posts/${id}/comments`,
+        `${API_URL}/api/posts/${id}/comments`,
         { text },
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -279,7 +280,7 @@ const category = post.category || "General";
     {post.media.map((media, index) => {
       const mediaSrc = media.url.startsWith("http")
         ? media.url
-        : `http://localhost:5000${media.url}`;
+        : `${API_URL}${media.url}`;
 
       return (
         <div key={media._id || media.url || index}>
@@ -318,7 +319,7 @@ const category = post.category || "General";
     src={
       post.mediaUrl.startsWith("http")
         ? post.mediaUrl
-        : `http://localhost:5000${post.mediaUrl}`
+        : `${API_URL}${post.mediaUrl}`
     }
     alt="Post attachment"
     style={{

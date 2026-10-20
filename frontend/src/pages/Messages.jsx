@@ -3,9 +3,10 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { useAuth } from "../context/AuthContext";
+import API_URL from "../api";
 
-const API = "http://localhost:5000/api/messages";
-const USERS_API = "http://localhost:5000/api/users";
+const API = API_URL + "/api/messages";
+const USERS_API = API_URL + "/api/users";
 
 function Messages() {
   const [conversations, setConversations] = useState([]);

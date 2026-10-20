@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import API_URL from "../api";
 
-const API = "http://localhost:5000/api/messages";
+const API = API_URL + "/api/messages";
 const LONG_PRESS_DELAY = 500;
 
 function Chat() {

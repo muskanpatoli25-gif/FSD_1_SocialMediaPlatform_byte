@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import Navbar from "../components/Navbar";
+import API_URL from "../api";
 
 
-const API = "http://localhost:5000";
+const API = API_URL + "";
 
 function Icon({ type, size = 18 }) {
   const common = {

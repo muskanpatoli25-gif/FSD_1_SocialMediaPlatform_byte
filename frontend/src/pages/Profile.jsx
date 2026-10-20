@@ -4,8 +4,9 @@ import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import Navbar from "../components/Navbar";
 import { useAuth } from "../context/AuthContext";
+import API_URL from "../api";
 
-const API = "http://localhost:5000/api";
+const API = API_URL + "/api";
 
 function Profile() {
   const { token, user: authUser } = useAuth();
@@ -437,7 +438,7 @@ function Profile() {
     {post.media.map((media, index) => {
       const mediaSrc = media.url.startsWith("http")
         ? media.url
-        : `http://localhost:5000${media.url}`;
+        : `${API_URL}${media.url}`;
 
       return (
         <div key={media._id || media.url || index}>
@@ -477,7 +478,7 @@ function Profile() {
     src={
       post.mediaUrl.startsWith("http")
         ? post.mediaUrl
-        : `http://localhost:5000${post.mediaUrl}`
+        : `${API_URL}${post.mediaUrl}`
     }
     alt="Post attachment"
     style={{
