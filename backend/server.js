@@ -5,7 +5,6 @@ const mongoose = require("mongoose");
 require("dotenv").config();
 
 const app = express();
-
 const authRoutes = require("./routes/authRoutes");
 const postRoutes = require("./routes/postRoutes");
 const userRoutes = require("./routes/userRoutes");
@@ -14,36 +13,33 @@ const notificationRoutes = require("./routes/notificationRoutes");
 
 app.use(cors());
 app.use(express.json());
-
 app.use("/uploads", express.static("uploads"));
-
 app.use("/api/auth", authRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/api/notifications", notificationRoutes);
-
 app.get("/", (req, res) => {
   res.json({
     message: "LINKUP backend is running successfully!",
   });
 });
 
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => {
+const PORT = process.env.PORT || 5000;
+
+async function startServer() {
+  try {
+    await mongoose.connect(process.env.MONGO_URI);
+
     console.log("MongoDB connected successfully!");
-  })
-  .catch((error) => {
+
+    app.listen(PORT, () => {
+      console.log(`LINKUP server running on port ${PORT}`);
+    });
+  } catch (error) {
     console.error("MongoDB connection failed:", error.message);
-  });
-
-module.exports = app;
-
-if (require.main === module) {
-  const PORT = process.env.PORT || 5000;
-
-  app.listen(PORT, () => {
-    console.log(`LINKUP server running on port ${PORT}`);
-  });
+    process.exit(1);
+  }
 }
+
+startServer();

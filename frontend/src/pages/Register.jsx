@@ -3,7 +3,6 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
-import API_URL from "../api";
 
 function Register() {
   const navigate = useNavigate();
@@ -35,7 +34,7 @@ function Register() {
 
     try {
       const response = await axios.post(
-       `${API_URL}/api/auth/register`,
+        "http://localhost:5000/api/auth/register",
         {
           name: name.trim(),
           username: username.trim().replace(/^@/, ""),
