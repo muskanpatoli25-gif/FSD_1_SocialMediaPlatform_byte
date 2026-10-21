@@ -1,39 +1,32 @@
 const express = require("express");
-const path = require("path");
-const fs = require("fs");
 const multer = require("multer");
+const cloudinary = require("cloudinary").v2;
 const Post = require("../models/Post");
+const Notification = require("../models/Notification");
+const User = require("../models/User");
 const authMiddleware = require("../middleware/authMiddleware");
 
 const router = express.Router();
-const uploadDir = path.join(__dirname, "../uploads");
-const Notification = require("../models/Notification");
-const User = require("../models/User");
 
-// Create uploads folder only in local development.
-// Vercel serverless functions should use cloud storage for uploads.
-if (
-  process.env.NODE_ENV !== "production" &&
-  !fs.existsSync(uploadDir)
-) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, uploadDir);
-  },
-
-  filename: (req, file, cb) => {
-    const uniqueName =
-      Date.now() +
-      "-" +
-      Math.round(Math.random() * 1e9) +
-      path.extname(file.originalname).toLowerCase();
-
-    cb(null, uniqueName);
-  },
+// Cloudinary configuration (values come from environment variables)
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
 });
+
+// Upload one in-memory file to Cloudinary and return the result
+const uploadToCloudinary = (file) =>
+  new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(
+      { folder: "linkup", resource_type: "auto" },
+      (error, result) => (error ? reject(error) : resolve(result))
+    );
+    stream.end(file.buffer);
+  });
+
+// Files are kept in memory (Vercel has no writable disk)
+const storage = multer.memoryStorage();
 
 const fileFilter = (req, file, cb) => {
   const allowedTypes = [
@@ -61,8 +54,7 @@ const upload = multer({
   },
 });
 
-
- // Create a new post with optional media uploads
+// Create a new post with optional media uploads
 router.post(
   "/",
   authMiddleware,
@@ -83,12 +75,12 @@ router.post(
         "lifestyle",
       ];
 
-      const uploadedMedia = (req.files || []).map((file) => ({
-        url: `/uploads/${file.filename}`,
-        type: file.mimetype.startsWith("video/") ? "video" : "image",
-      }));
-
-      if (!postContent && !mediaUrl && uploadedMedia.length === 0) {
+      // 1. Validation first (so nothing is uploaded for an invalid post)
+      if (
+        !postContent &&
+        !mediaUrl &&
+        (!req.files || req.files.length === 0)
+      ) {
         return res.status(400).json({
           message: "Please add text or media to your post.",
         });
@@ -113,9 +105,20 @@ router.post(
         return res.status(400).json({
           message: "Media URL must be a valid text value.",
         });
-      
       }
 
+      // 2. Upload files to Cloudinary
+      const uploadedMedia = await Promise.all(
+        (req.files || []).map(async (file) => {
+          const result = await uploadToCloudinary(file);
+          return {
+            url: result.secure_url,
+            type: file.mimetype.startsWith("video/") ? "video" : "image",
+          };
+        })
+      );
+
+      // 3. Create the post
       const post = await Post.create({
         author: req.userId,
         content: postContent,
@@ -123,27 +126,28 @@ router.post(
         mediaUrl: mediaUrl || "",
         media: uploadedMedia,
       });
+
       // Notify followers when a new post is published
-const author = await User.findById(req.userId).select("followers");
+      const author = await User.findById(req.userId).select("followers");
 
-if (author && author.followers?.length > 0) {
-  const notifications = author.followers
-    .filter(
-      (followerId) =>
-        followerId.toString() !== req.userId.toString()
-    )
-    .map((followerId) => ({
-      recipient: followerId,
-      sender: req.userId,
-      type: "new_post",
-      message: "published a new post.",
-      post: post._id,
-    }));
+      if (author && author.followers?.length > 0) {
+        const notifications = author.followers
+          .filter(
+            (followerId) =>
+              followerId.toString() !== req.userId.toString()
+          )
+          .map((followerId) => ({
+            recipient: followerId,
+            sender: req.userId,
+            type: "new_post",
+            message: "published a new post.",
+            post: post._id,
+          }));
 
-  if (notifications.length > 0) {
-    await Notification.insertMany(notifications);
-  }
-}
+        if (notifications.length > 0) {
+          await Notification.insertMany(notifications);
+        }
+      }
 
       const populatedPost = await post.populate(
         "author",
@@ -164,7 +168,6 @@ if (author && author.followers?.length > 0) {
   }
 );
 
-
 /* Get all posts (newest first) */
 router.get("/", async (req, res) => {
   try {
@@ -183,8 +186,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-
- // Delete own post
+// Delete own post
 router.delete("/:id", authMiddleware, async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
@@ -217,7 +219,6 @@ router.delete("/:id", authMiddleware, async (req, res) => {
   }
 });
 
-
 // Like or unlike a post
 router.post("/:id/like", authMiddleware, async (req, res) => {
   try {
@@ -243,25 +244,24 @@ router.post("/:id/like", authMiddleware, async (req, res) => {
       post.likes.push(req.userId);
     }
 
-   await post.save();
+    await post.save();
 
-// Notify post owner only when a new like is added
-if (!alreadyLiked && post.author.toString() !== userId) {
-  await Notification.create({
-    recipient: post.author,
-    sender: req.userId,
-    type: "like",
-    message: "liked your post.",
-    post: post._id,
-  });
-}
+    // Notify post owner only when a new like is added
+    if (!alreadyLiked && post.author.toString() !== userId) {
+      await Notification.create({
+        recipient: post.author,
+        sender: req.userId,
+        type: "like",
+        message: "liked your post.",
+        post: post._id,
+      });
+    }
 
-return res.status(200).json({
-  message: alreadyLiked ? "Post unliked." : "Post liked.",
-  likes: post.likes.length,
-  liked: !alreadyLiked,
-});
-
+    return res.status(200).json({
+      message: alreadyLiked ? "Post unliked." : "Post liked.",
+      likes: post.likes.length,
+      liked: !alreadyLiked,
+    });
   } catch (error) {
     console.error("Like post error:", error.message);
     return res.status(500).json({
@@ -269,6 +269,7 @@ return res.status(200).json({
     });
   }
 });
+
 // Add a comment to a post
 router.post("/:id/comments", authMiddleware, async (req, res) => {
   try {
@@ -300,16 +301,17 @@ router.post("/:id/comments", authMiddleware, async (req, res) => {
     });
 
     await post.save();
+
     // Notify post owner about a new comment
-if (post.author.toString() !== req.userId.toString()) {
-  await Notification.create({
-    recipient: post.author,
-    sender: req.userId,
-    type: "comment",
-    message: "commented on your post.",
-    post: post._id,
-  });
-}
+    if (post.author.toString() !== req.userId.toString()) {
+      await Notification.create({
+        recipient: post.author,
+        sender: req.userId,
+        type: "comment",
+        message: "commented on your post.",
+        post: post._id,
+      });
+    }
 
     await post.populate(
       "comments.user",
@@ -331,12 +333,13 @@ if (post.author.toString() !== req.userId.toString()) {
   }
 });
 
-
 // Get comments for a post
 router.get("/:id/comments", async (req, res) => {
   try {
-    const post = await Post.findById(req.params.id)
-      .populate("comments.user", "name username profileImage");
+    const post = await Post.findById(req.params.id).populate(
+      "comments.user",
+      "name username profileImage"
+    );
 
     if (!post) {
       return res.status(404).json({
