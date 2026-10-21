@@ -1,6 +1,8 @@
 # LinkUp — Social Media Platform
 LinkUp is a full-stack social media web application designed to help users connect, share posts, interact with other users. The project is developed using React for the frontend and Node.js, Express.js, and MongoDB for the backend.
 
+- Twisted Task: Implemented a personalized social media feed using the Echo Chamber algorithm, prioritizing posts from the content category users interact with the most.
+
 🌐 Live Demo
 
 - Frontend+backend:
