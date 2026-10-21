@@ -124,3 +124,5 @@ The backend uses the following `vercel.json` configuration to route incoming req
   ]
 }
 ```
+Author
+muskanpatoli25-gif | Arithmatrix AVIP 2026
