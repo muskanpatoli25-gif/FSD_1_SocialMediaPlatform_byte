@@ -985,8 +985,31 @@ img {
     grid-template-columns: minmax(0, 700px);
   }
 
+  /* Sidebar chhupane ki jagah feed ke upar le aao */
   .home-right-sidebar {
+    order: -1;
+  }
+
+  /* Mobile par About/Privacy/Terms wala footer chhupa do */
+  .home-right-sidebar .home-footer {
     display: none;
+  }
+
+  /* Chips ek line me side scroll */
+  .interest-tags {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+  }
+
+  .interest-tags::-webkit-scrollbar {
+    display: none;
+  }
+
+  .interest-tag {
+    flex: 0 0 auto;
+    white-space: nowrap;
   }
 }
 
