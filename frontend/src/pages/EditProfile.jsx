@@ -1,12 +1,11 @@
-
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Navbar from "../components/Navbar";
 import { useAuth } from "../context/AuthContext";
-   import API_URL from "../api";
+import API_URL from "../api";
 
-   const AUTH_URL = API_URL + "/api/auth";
+const AUTH_URL = API_URL + "/api/auth";
 
 function EditProfile() {
   const { token, login } = useAuth();
@@ -33,7 +32,7 @@ function EditProfile() {
 
     const fetchProfile = async () => {
       try {
-        const response = await axios.get(`${API_URL}/me`, {
+        const response = await axios.get(`${AUTH_URL}/me`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -188,7 +187,7 @@ function EditProfile() {
       }
 
       const response = await axios.put(
-        `${API_URL}/me`,
+        `${AUTH_URL}/me`,
         {
           name: formData.name,
           username: formData.username,
