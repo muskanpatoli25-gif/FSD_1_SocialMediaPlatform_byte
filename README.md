@@ -14,6 +14,14 @@ LinkUp provides a social platform where users can create accounts, manage profil
 
 The project focuses on full-stack development, API integration, database management, authentication, and responsive user interface design.
 
+Technology	Purpose
+React + Vite	: Frontend
+Node.js + Express.js: 	Backend
+MongoDB + Mongoose: 	Database
+Axios: 	API requests
+Cloudinary : 	Image upload and media storage
+ Vercel: 	Deployment
+
 ## ✨ Features
 
 ### 1. User Authentication
