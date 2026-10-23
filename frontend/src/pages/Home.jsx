@@ -839,17 +839,21 @@ const visiblePosts = useMemo(() => {
         <div key={media._id || media.url || index}>
           {media.type === "video" ? (
             <video
-              src={mediaSrc}
-              controls
-              preload="metadata"
-              style={{
-                width: "100%",
-                maxHeight: "400px",
-                objectFit: "contain",
-                borderRadius: "12px",
-                display: "block",
-              }}
-            />
+  src={mediaSrc}
+  controls
+  preload="metadata"
+  playsInline
+  style={{
+    display: "block",
+    maxWidth: "100%",
+    maxHeight: "520px",
+    width: "auto",
+    height: "auto",
+    margin: "0 auto",
+    borderRadius: "12px",
+    background: "#000",
+  }}
+/>
           ) : (
             <img
               src={mediaSrc}
@@ -859,12 +863,14 @@ const visiblePosts = useMemo(() => {
                 console.error("Unable to load post image:", mediaSrc);
               }}
               style={{
-                width: "100%",
-                maxHeight: "400px",
-                objectFit: "contain",
-                borderRadius: "12px",
-                display: "block",
-              }}
+  display: "block",
+  maxWidth: "100%",
+  maxHeight: "520px",
+  width: "auto",
+  height: "auto",
+  margin: "0 auto",
+  borderRadius: "12px",
+}}
             />
           )}
         </div>
@@ -880,12 +886,14 @@ const visiblePosts = useMemo(() => {
     }
     alt="Post attachment"
     style={{
-      width: "100%",
-      maxHeight: "400px",
-      objectFit: "contain",
-      borderRadius: "12px",
-      marginTop: "12px",
-    }}
+  display: "block",
+  maxWidth: "100%",
+  maxHeight: "520px",
+  width: "auto",
+  height: "auto",
+  margin: "12px auto 0",
+  borderRadius: "12px",
+}}
   />
 ) : null}
 

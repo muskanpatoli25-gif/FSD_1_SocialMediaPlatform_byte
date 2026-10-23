@@ -2568,21 +2568,31 @@ img {
   position: relative;
 }
 
+/* Profile page - big avatar */
 .profile-avatar-large {
-  width: 110px;
-  height: 110px;
-  margin-top: -55px;
-  flex-shrink: 0;
+  width: 120px;
+  height: 120px;
+  aspect-ratio: 1 / 1;       /* hamesha perfect square -> perfect circle */
   border-radius: 50%;
-  border: 5px solid var(--white);
-  background: var(--wine-light);
-  color: var(--wine);
-  display: grid;
-  place-items: center;
-  font-family: "Space Grotesk", sans-serif;
-  font-size: 38px;
+  overflow: hidden;          /* circle se bahir ka hissa cut ho jaye */
+  flex-shrink: 0;            /* flex mein squeeze/oval hone se bachaye */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 4px solid #fff;
+  background: #7a1f45;       /* apne theme ka colour */
+  color: #fff;
+  font-size: 40px;
   font-weight: 700;
-  box-shadow: var(--shadow);
+}
+
+.profile-avatar-large img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;         /* image crop hoke circle fill karegi, stretch nahi */
+  object-position: center;
+  border-radius: 50%;
+  display: block;
 }
 
 .profile-details {
@@ -2724,15 +2734,29 @@ img {
   gap: 10px;
 }
 
+/* Posts ke andar chhota avatar */
 .profile-post-avatar {
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
+  aspect-ratio: 1 / 1;
   border-radius: 50%;
-  background: var(--wine);
-  color: var(--white);
-  display: grid;
-  place-items: center;
+  overflow: hidden;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #7a1f45;
+  color: #fff;
   font-weight: 700;
+}
+
+.profile-post-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 50%;
+  display: block;
 }
 
 .profile-post-user strong,
@@ -2767,6 +2791,9 @@ img {
 }
 
 .profile-post-actions {
+  margin-top: 14px;         /*  media/content se gap */
+  padding-top: 12px;        /* andar ka space */
+  border-top: 1px solid var(--border-light);  /*  halki divider line */
   display: flex;
   align-items: center;
   flex-wrap: wrap;
@@ -3023,8 +3050,10 @@ img {
 .edit-avatar {
   width: 82px;
   height: 82px;
+  aspect-ratio: 1 / 1; 
   flex-shrink: 0;
   border-radius: 50%;
+  overflow: hidden;
   background: var(--wine-light);
   color: var(--wine);
   display: grid;
@@ -3033,7 +3062,14 @@ img {
   font-size: 30px;
   font-weight: 700;
 }
-
+.edit-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;        
+  object-position: center;
+  border-radius: 50%;
+  display: block;
+}
 .edit-avatar-section strong,
 .edit-avatar-section span {
   display: block;
@@ -3058,6 +3094,7 @@ img {
   color: var(--wine);
   font-size: 12px;
   font-weight: 700;
+   margin-left: 10px;
 }
 
 .change-photo-button:hover {
@@ -3167,19 +3204,30 @@ img {
   align-items: center;
   gap: 11px;
   margin-top: 18px;
+   margin-bottom: 12px; 
 }
 
 .preview-avatar {
   width: 45px;
   height: 45px;
+  aspect-ratio: 1 / 1;      /* NEW */
+  flex-shrink: 0;           /* NEW: flex mein oval hone se bachayega */
   border-radius: 50%;
+  overflow: hidden;         /* NEW: circle se bahir ka hissa cut */
   background: var(--wine);
   color: var(--white);
   display: grid;
   place-items: center;
   font-weight: 700;
 }
-
+.preview-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;        /* stretch nahi hogi, crop hoke fit hogi */
+  object-position: center;
+  border-radius: 50%;
+  display: block;
+}
 .preview-user strong,
 .preview-user span {
   display: block;
@@ -3332,15 +3380,26 @@ img {
 .post-side-avatar {
   width: 44px;
   height: 44px;
+  aspect-ratio: 1 / 1;      /* NEW */
   flex-shrink: 0;
   border-radius: 50%;
+  overflow: hidden;         /* NEW */
   background: var(--wine);
   color: var(--white);
   display: grid;
   place-items: center;
   font-weight: 700;
 }
-
+.post-details-avatar img,
+.comment-avatar img,
+.post-side-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;        /* stretch nahi hogi, crop hoke fit hogi */
+  object-position: center;
+  border-radius: 50%;
+  display: block;
+}
 .post-details-author-info {
   flex: 1;
 }
@@ -4228,13 +4287,24 @@ img {
 .chat-user-avatar {
   width: 44px;
   height: 44px;
+   aspect-ratio: 1 / 1; 
   flex-shrink: 0;
   display: grid;
   place-items: center;
   border-radius: 50%;
+    overflow: hidden; 
   background: var(--wine);
   color: var(--white);
   font-weight: 700;
+}
+.conversation-avatar img,
+.chat-user-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;        /* stretch nahi hogi, crop hoke fit hogi */
+  object-position: center;
+  border-radius: 50%;
+  display: block;
 }
 
 .conversation-info {

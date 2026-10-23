@@ -212,6 +212,7 @@ function PostDetails() {
 const authorId = String(author._id || author.id || "");
 
 const authorName = author.name || "LINKUP User";
+const authorImage = author.profileImage || "";
 const username = author.username || "user";
 const category = post.category || "General";
 
@@ -243,9 +244,13 @@ const category = post.category || "General";
           <section>
             <article className="post-details-card">
               <div className="post-details-author">
-                <div className="post-details-avatar">
-                  {authorName.charAt(0).toUpperCase()}
-                </div>
+               <div className="post-details-avatar">
+  {authorImage ? (
+    <img src={authorImage} alt={authorName} />
+  ) : (
+    authorName.charAt(0).toUpperCase()
+  )}
+</div>
 
                 <div className="post-details-author-info">
                   <strong>{authorName}</strong>
@@ -285,29 +290,35 @@ const category = post.category || "General";
       return (
         <div key={media._id || media.url || index}>
           {media.type === "video" ? (
-            <video
-              src={mediaSrc}
-              controls
-              preload="metadata"
-              style={{
-                width: "100%",
-                maxHeight: "450px",
-                objectFit: "contain",
-                borderRadius: "12px",
-                display: "block",
-              }}
-            />
+           <video
+  src={mediaSrc}
+  controls
+  preload="metadata"
+  playsInline
+  style={{
+    display: "block",
+    maxWidth: "100%",
+    maxHeight: post.media.length > 1 ? "300px" : "600px",
+    width: "auto",
+    height: "auto",
+    margin: "0 auto",
+    borderRadius: "12px",
+    background: "#000",
+  }}
+/>
           ) : (
             <img
               src={mediaSrc}
               alt="Post attachment"
-              style={{
-                width: "100%",
-                maxHeight: "450px",
-                objectFit: "contain",
-                borderRadius: "12px",
-                display: "block",
-              }}
+             style={{
+  display: "block",
+  maxWidth: "100%",
+  maxHeight: post.media.length > 1 ? "300px" : "600px",
+  width: "auto",
+  height: "auto",
+  margin: "0 auto",
+  borderRadius: "12px",
+}}
             />
           )}
         </div>
@@ -322,14 +333,15 @@ const category = post.category || "General";
         : `${API_URL}${post.mediaUrl}`
     }
     alt="Post attachment"
-    style={{
-      width: "100%",
-      maxHeight: "450px",
-      objectFit: "contain",
-      borderRadius: "12px",
-      marginTop: "14px",
-      display: "block",
-    }}
+   style={{
+  display: "block",
+  maxWidth: "100%",
+  maxHeight: "600px",
+  width: "auto",
+  height: "auto",
+  margin: "14px auto 0",
+  borderRadius: "12px",
+}}
   />
 ) : null}
 
@@ -398,9 +410,13 @@ const category = post.category || "General";
                 className="comment-form-card"
                 onSubmit={handleComment}
               >
-                <div className="comment-avatar">
-                  {(user?.name || "M").charAt(0).toUpperCase()}
-                </div>
+               <div className="comment-avatar">
+  {user?.profileImage ? (
+    <img src={user.profileImage} alt={user?.name || "You"} />
+  ) : (
+    (user?.name || "M").charAt(0).toUpperCase()
+  )}
+</div>
 
                 <div className="comment-input-wrapper">
                   <textarea
@@ -440,9 +456,13 @@ const category = post.category || "General";
                     className="comment-card"
                     key={comment._id || index}
                   >
-                    <div className="comment-avatar">
-                      {commentName.charAt(0).toUpperCase()}
-                    </div>
+                   <div className="comment-avatar">
+  {commentUser.profileImage ? (
+    <img src={commentUser.profileImage} alt={commentName} />
+  ) : (
+    commentName.charAt(0).toUpperCase()
+  )}
+</div>
 
                     <div className="comment-content">
                       <div className="comment-user-row">
@@ -502,8 +522,12 @@ const category = post.category || "General";
 
               <div className="post-side-user">
                 <div className="post-side-avatar">
-                  {authorName.charAt(0).toUpperCase()}
-                </div>
+  {authorImage ? (
+    <img src={authorImage} alt={authorName} />
+  ) : (
+    authorName.charAt(0).toUpperCase()
+  )}
+</div>
 
                 <div>
                   <strong>{authorName}</strong>

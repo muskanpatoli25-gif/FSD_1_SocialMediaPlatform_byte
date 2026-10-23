@@ -443,30 +443,36 @@ function Profile() {
       return (
         <div key={media._id || media.url || index}>
           {media.type === "video" ? (
-            <video
-              src={mediaSrc}
-              controls
-              preload="metadata"
-              style={{
-                width: "100%",
-                maxHeight: "400px",
-                objectFit: "contain",
-                borderRadius: "12px",
-                display: "block",
-              }}
-            />
+           <video
+  src={mediaSrc}
+  controls
+  preload="metadata"
+  playsInline
+  style={{
+    display: "block",
+    maxWidth: "100%",
+    maxHeight: post.media.length > 1 ? "300px" : "520px",
+    width: "auto",
+    height: "auto",
+    margin: "0 auto",
+    borderRadius: "12px",
+    background: "#000",
+  }}
+/>
           ) : (
             <img
               src={mediaSrc}
               alt="Post attachment"
               loading="lazy"
-              style={{
-                width: "100%",
-                maxHeight: "400px",
-                objectFit: "contain",
-                borderRadius: "12px",
-                display: "block",
-              }}
+             style={{
+  display: "block",
+  maxWidth: "100%",
+  maxHeight: post.media.length > 1 ? "300px" : "520px",
+  width: "auto",
+  height: "auto",
+  margin: "0 auto",
+  borderRadius: "12px",
+}}
             />
           )}
         </div>
@@ -481,14 +487,15 @@ function Profile() {
         : `${API_URL}${post.mediaUrl}`
     }
     alt="Post attachment"
-    style={{
-      width: "100%",
-      maxHeight: "400px",
-      objectFit: "contain",
-      borderRadius: "12px",
-      marginTop: "12px",
-      display: "block",
-    }}
+   style={{
+  display: "block",
+  maxWidth: "100%",
+  maxHeight: "520px",
+  width: "auto",
+  height: "auto",
+  margin: "12px auto 0",
+  borderRadius: "12px",
+}}
   />
 ) : null}
 
